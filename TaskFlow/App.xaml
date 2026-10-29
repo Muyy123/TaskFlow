@@ -1,0 +1,13 @@
+<Application x:Class="TaskFlow.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 注意：这里不设置 StartupUri，主窗口由 App.xaml.cs 通过 DI 容器解析并手动 Show。 -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 后续在此合并主题资源：
+                     Themes/Light.xaml 与 Themes/Dark.xaml 由 ThemeService 在运行时动态切换。 -->
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -17,18 +17,18 @@
         <!-- ViewModel → 视图 的映射：骨架阶段用占位 TextBlock，后续替换为真实的 UserControl。
              例如 <DataTemplate DataType="{x:Type pages:DashboardViewModel}"><views:DashboardView/></DataTemplate> -->
         <DataTemplate DataType="{x:Type pages:DashboardViewModel}">
-            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="#FF333333"
+            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="{DynamicResource TextPrimaryBrush}"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:ProjectsViewModel}">
-            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="#FF333333"
+            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="{DynamicResource TextPrimaryBrush}"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:TaskListViewModel}">
             <views:TaskListView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:SettingsViewModel}">
-            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="#FF333333"
+            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="{DynamicResource TextPrimaryBrush}"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DataTemplate>
     </Window.Resources>
@@ -40,17 +40,19 @@
         </Grid.RowDefinitions>
 
         <!-- ══════════ 顶部工具栏 ══════════ -->
-        <Border Grid.Row="0" Background="#FF2B3A4A">
+        <Border Grid.Row="0" Background="{DynamicResource TopBarBackgroundBrush}">
             <DockPanel LastChildFill="False">
                 <TextBlock DockPanel.Dock="Left"
                            Text="TaskFlow"
-                           Foreground="White" FontSize="18" FontWeight="Bold"
+                           Foreground="{DynamicResource TextOnDarkBrush}" FontSize="18" FontWeight="Bold"
                            VerticalAlignment="Center" Margin="16,0,0,0"/>
                 <!-- 右侧：主题切换按钮占位（后续绑定 SettingsViewModel 的主题切换命令） -->
-                <TextBlock DockPanel.Dock="Right"
-                           Text="主题"
-                           Foreground="White" FontSize="13"
-                           VerticalAlignment="Center" Margin="0,0,16,0"/>
+                <Button DockPanel.Dock="Right"
+                        Content="{Binding ThemeButtonText}"
+                        Command="{Binding ToggleThemeCommand}"
+                        Foreground="{DynamicResource TextOnDarkBrush}" FontSize="13"
+                        Background="{DynamicResource TopBarBackgroundBrush}"
+                        VerticalAlignment="Center" Margin="0,0,16,0"/>
             </DockPanel>
         </Border>
 
@@ -61,18 +63,17 @@
             </Grid.ColumnDefinitions>
 
             <!-- ══════════ 左侧导航栏 ══════════ -->
-            <Border Grid.Column="0" Background="#FF3A4A5C">
+            <Border Grid.Column="0" Background="{DynamicResource SidebarBackgroundBrush}">
                 <ListBox ItemsSource="{Binding NavItems}"
                          SelectedItem="{Binding SelectedNavItem, Mode=TwoWay}"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Foreground="White">
-                    <ListBox.ItemTemplate>
+                         Background="{DynamicResource SidebarBackgroundBrush}"
+                         BorderThickness="0">
+                    <ListBox.ItemTemplate><!--左侧的list 仪表盘、项目、任务、设置-->
                         <DataTemplate>
                             <TextBlock Text="{Binding Title}"
                                        FontSize="14"
                                        Padding="16,12"
-                                       Foreground="White"/>
+                                       Foreground="{DynamicResource TextOnDarkBrush}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemContainerStyle>
@@ -86,7 +87,7 @@
             </Border>
 
             <!-- ══════════ 内容区 ══════════ -->
-            <Border Grid.Column="1" Background="#FFF4F6F8">
+            <Border Grid.Column="1" Background="{DynamicResource ContentBackgroundBrush}">
                 <ContentControl Content="{Binding CurrentViewModel}"/>
             </Border>
         </Grid>

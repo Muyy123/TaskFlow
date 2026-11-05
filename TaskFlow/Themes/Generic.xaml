@@ -37,7 +37,7 @@
                                                     <DataTrigger Binding="{Binding IsCurrent}" Value="True">
                                                         <Setter Property="FontWeight" Value="Bold"/>
                                                         <Setter Property="Foreground" Value="White"/>
-                                                        <Setter Property="Background" Value="#FF4A90D9"/>
+                                                        <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>

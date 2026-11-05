@@ -22,11 +22,11 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 - ✅ 任务列表页：搜索、分页、新增、删除选中任务
 - ✅ 异步加载与取消：`CancellationTokenSource` 处理快速搜索/翻页的竞态
 - ✅ 自定义分页控件 `PaginationControl`：依赖属性、`GoToPageCommand`、ControlTemplate 默认样式
+- ✅ 浅色 / 深色主题切换：语义色资源字典 + `DynamicResource` 运行时切换
 
 ### 规划中
 - ⬜ 项目管理页（CRUD、搜索、筛选）
 - ⬜ 仪表盘统计图表（LiveCharts2）
-- ⬜ 浅色 / 深色主题切换
 - ⬜ 任务编辑对话框与表单验证
 - ⬜ 列排序、CSV 导入导出
 - ⬜ 单元测试
@@ -104,12 +104,13 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - **短生命周期 DbContext**：通过 `IDbContextFactory<AppDbContext>` 在每次操作中创建独立上下文，避免桌面应用中实体长期被跟踪导致的累积问题。
 - **异步竞态处理**：加载任务时使用 `CancellationTokenSource` 取消上一次未完成的请求，避免快速搜索/翻页时旧结果覆盖新结果。
 - **自定义控件**：`PaginationControl` 继承 `Control`，通过依赖属性、只读计算属性与 `ControlTemplate` 实现，外观与逻辑分离，默认样式经 `ThemeInfo` 定位。
+- **运行时主题切换**：以两套语义色 `ResourceDictionary` 定义浅色/深色主题，通过 `DynamicResource` 与 `ThemeService` 在运行时替换字典实现整体换肤。
 
 ## Roadmap
 
 - [ ] 项目管理页
 - [ ] 仪表盘（LiveCharts2 图表）
-- [ ] 主题切换
+- [x] 主题切换
 - [ ] 表单验证与编辑对话框
 - [ ] 排序与 CSV 导入导出
 - [ ] xUnit 单元测试

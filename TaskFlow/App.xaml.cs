@@ -7,6 +7,7 @@ using TaskFlow.Data;
 using TaskFlow.Services;
 using TaskFlow.ViewModels;
 using TaskFlow.ViewModels.Pages;
+using TaskFlow.Theme;
 
 namespace TaskFlow;
 
@@ -22,16 +23,20 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-
+        // 构建宿主
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices(ConfigureServices)
             .Build();
 
         AppHost.StartAsync().GetAwaiter().GetResult();
 
+        // 初始化 默认浅色主题
+        var theme = AppHost.Services.GetRequiredService<ThemeService>();
+        theme.ApplyTheme(dark: false);
+
         // 必须在解析任何依赖 DbContext 的对象之前完成建库与种子数据
         InitializeDatabase();
-
+        //打开主窗口
         var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
     }
@@ -46,6 +51,7 @@ public partial class App : Application
 
         // ── Services ──
         services.AddSingleton<ITaskService, TaskService>();
+        services.AddSingleton<ThemeService>();
 
         // ── ViewModels ──
         services.AddSingleton<MainViewModel>();

@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TaskFlow.Theme;
 using TaskFlow.ViewModels.Pages;
 
 namespace TaskFlow.ViewModels;
@@ -18,14 +20,20 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private NavItemViewModel? _selectedNavItem;
 
+    private readonly ThemeService _themeService;
+    // 按钮文字，[ObservableProperty]自动通知ui
+    [ObservableProperty]
+    private string _themeButtonText = "切换深色";
+
     public ObservableCollection<NavItemViewModel> NavItems { get; }
 
-    public MainViewModel(
+    public MainViewModel(ThemeService themeService,
         DashboardViewModel dashboard,
         ProjectsViewModel projects,
         TaskListViewModel tasks,
         SettingsViewModel settings)
     {
+        _themeService = themeService;
         NavItems = new ObservableCollection<NavItemViewModel>
         {
             new("仪表盘", dashboard),
@@ -45,6 +53,13 @@ public partial class MainViewModel : ViewModelBase
         {
             CurrentViewModel = value.ViewModel;
         }
+    }
+
+    [RelayCommand]
+    private void ToggleTheme()
+    {
+        _themeService.ApplyTheme(!_themeService.IsDark);
+        ThemeButtonText = _themeService.IsDark ? "切换浅色" : "切换深色";
     }
 }
 

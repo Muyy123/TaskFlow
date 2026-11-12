@@ -51,6 +51,7 @@ public partial class App : Application
 
         // ── Services ──
         services.AddSingleton<ITaskService, TaskService>();
+        services.AddSingleton<IProjectService, ProjectService>();
         services.AddSingleton<ThemeService>();
 
         // ── ViewModels ──

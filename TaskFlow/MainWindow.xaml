@@ -21,8 +21,7 @@
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:ProjectsViewModel}">
-            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="{DynamicResource TextPrimaryBrush}"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <views:ProjectsView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:TaskListViewModel}">
             <views:TaskListView/>

@@ -21,12 +21,10 @@
         <!--第0行：搜索+筛选-->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <!--搜索框占满剩余宽度-->
-                <ColumnDefinition Width="Auto"/>
-                <!--复选框按内容自适应-->
-                <ColumnDefinition Width="Auto"/>
-                <!--按钮按内容自适应-->
+                <ColumnDefinition Width="*"/>  <!--搜索框占满剩余宽度-->
+                <ColumnDefinition Width="Auto"/> <!--复选框按内容自适应-->
+                <ColumnDefinition Width="Auto"/> <!--按钮按内容自适应-->
+                <ColumnDefinition Width="Auto"/> <!--删除按钮按内容自适应-->
             </Grid.ColumnDefinitions>
 
             <!--搜索输入框 UpdateSourceTrigger=PropertyChanged: 每敲一个字就立即更新SearchText-->
@@ -48,6 +46,12 @@
                     Command="{Binding SearchCommand}"
                     Padding="16,5"
                     Margin="8,0,0,0"/>
+            <!--删除按钮：绑定 DeleteProjectCommand，没选中项目时 Command 的 CanExecute 返回 false，按钮自动禁用-->
+            <Button Grid.Column="3"
+                    Content="删除选择"
+                    Command="{Binding DeleteProjectCommand}"
+                    Padding="16, 5"
+                    Margin="8,0,0,0"/>
         </Grid>
         <!--第1行：加载进度条（Isloading为true是滚动）-->
         <ProgressBar Grid.Row="1" Height="3" Margin="0,8"
@@ -57,6 +61,7 @@
         <Grid Grid.Row="2">
             <!--项目列表表格-->
             <DataGrid ItemsSource="{Binding Projects}"
+                      SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       CanUserAddRows="False"

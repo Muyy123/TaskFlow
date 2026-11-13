@@ -47,4 +47,27 @@ public class ProjectService : IProjectService
         // 执行SQL查询 cancellationToken
         return await query.ToListAsync(cancellationToken);
     }
+
+    /// <summary>
+    /// 根据任务id删除项目
+    /// </summary>
+    /// <param name="id">待删除任务的主键ID</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>删除成功返回true；任务不存在返回false</returns>
+    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    {
+        // 每次操作独立创建 DbContext，await using 保证结束时释放
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+        // 根据id查到项目
+        var project = await db.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        // 查不到说明已被删除
+        if (project is null) 
+            return false;
+        // 查到了就删除
+        db.Projects.Remove(project);
+        // SaveChanges 时，EF Core 会按 AppDbContext 里配好的删除行为（SetNull）
+        // 所以该项目的任务会保留，只是变成"未分类"。
+        await db.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }

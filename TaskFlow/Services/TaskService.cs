@@ -90,14 +90,21 @@ public class TaskService : ITaskService
         return task;
     }
 
+    /// <summary>
+    /// 根据任务id删除任务
+    /// </summary>
+    /// <param name="id">待删除任务的主键ID</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>删除成功返回true；任务不存在返回false</returns>
     public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
+        // 每次操作独立创建 DbContext，await using 保证结束时释放
         await using var db = await _factory.CreateDbContextAsync(cancellationToken);
-        var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-        if (task is null)
+        var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);//根据id查询对应的任务记录
+        if (task is null)//没找到，直接返回false
             return false;
 
-        db.Tasks.Remove(task);
+        db.Tasks.Remove(task);//找到了 就删除
         await db.SaveChangesAsync(cancellationToken);
         return true;
     }

@@ -14,12 +14,14 @@ namespace TaskFlow.ViewModels.Pages;
 public partial class ProjectsViewModel : ViewModelBase
 {
     private readonly IProjectService _projectService; // 用来调用数据库查询
+    private readonly IDialogService _dialogService;  // 用来弹确认框
     private CancellationTokenSource? _loadCts; // 用于取消上一次未完成的加载
 
     // 构造函数：DI自动把IProjectService注入进来
-    public ProjectsViewModel(IProjectService projectService)
+    public ProjectsViewModel(IProjectService projectService, IDialogService dialogService)
     {
         _projectService = projectService;
+        _dialogService = dialogService;
 
         // 页面初始化，自动加载一次项目
         // _代表“发射后不管” 不等待这个task完成，不阻塞UI
@@ -43,6 +45,12 @@ public partial class ProjectsViewModel : ViewModelBase
     // 列表是否为空，“暂无项目”空状态提示
     [ObservableProperty]
     private bool _isEmpty;
+
+    // 表格当前选中的项目，双向绑定到 DataGrid 的 SelectedItem
+    // NotifyCanExecuteChangedFor：选中变化时，通知 DeleteProjectCommand（删除按钮）重新判断能否点击
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(DeleteProjectCommand))]
+    private Project? _selectedProject;
     
     /// <summary>
     /// 加载项目列表
@@ -99,4 +107,36 @@ public partial class ProjectsViewModel : ViewModelBase
     /// 只要下拉框切换选项，值一变，立刻重新查询
     /// </summary>
     partial void OnHasTasksChanged(bool value) => _ = LoadProjectsAsync();
+
+    /// <summary>
+    /// 删除当前选中的项目
+    /// CanExecute = nameof(CanDeleteProject)：没选中项目时，按钮自动置灰、不可点击
+    /// 自动生成DeleteProjectCommand
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanDeleteProject))]
+    private async Task DeleteProjectAsync()
+    {
+        if (SelectedProject is null)
+            return;
+
+        var project = SelectedProject; // 先存个引用，防止后续选中状态变化
+
+        // 弹确认框
+        var message = $"确认要删除项目{project.Name}吗？\n该项目下的任务不会被删除。";
+        if (!_dialogService.Confirm(message, "删除项目"))
+            return; // 用户点了“否”，直接取消，什么都不做
+
+        var success = await _projectService.DeleteAsync(project.Id);
+        if (!success)
+            return; // 项目已不存在，直接返回
+
+        // 删除成功：清空选中+刷新列表
+        SelectedProject = null;
+        await LoadProjectsAsync();
+    }
+    /// <summary>
+    /// 删除按钮只有再选中了项目时才可点击
+    /// </summary>
+    /// <returns></returns>
+    private bool CanDeleteProject() => SelectedProject is not null;
 }

@@ -4,7 +4,7 @@ using TaskFlow.Models.Dtos;
 namespace TaskFlow.Services;
 /// <summary>
 /// 项目服务接口
-/// 本轮只实现列表查询方法（搜索+筛选）和删除；后续再追加 Create/Update/Delete
+/// 实现列表查询方法（搜索+筛选）、删除、新建，编辑
 /// </summary>
 public interface IProjectService
 {
@@ -24,4 +24,9 @@ public interface IProjectService
     /// </summary>
     /// <returns>保存后的项目（此时Id、CreatedAt已被填充）</returns>
     Task<Project> CreateAsync(Project project, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// 编辑已有项目（按Id找到，覆盖Name/Description/Color三个字段）
+    /// 返回更新后的项目
+    /// </summary>
+    Task<Project> UpdateAsync(Project project, CancellationToken cancellationToken = default);
 }

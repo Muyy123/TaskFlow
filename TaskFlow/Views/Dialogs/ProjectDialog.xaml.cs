@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using TaskFlow.Models;
 using TaskFlow.ViewModels.Dialogs;
 
 namespace TaskFlow.Views.Dialogs;
@@ -16,9 +17,14 @@ public partial class ProjectDialog : Window
     /// </summary>
     public ProjectDialogViewModel ViewModel { get; }
 
-    public ProjectDialog()
+    /// <summary>
+    /// existing：传 null 表示"新建"；传已有项目表示"编辑"（会预填字段）
+    /// </summary>
+    public ProjectDialog(Project? existing = null)
     {
         InitializeComponent();//加载XAML定义的界面元素
+
+        Title = existing is null ? "新建项目" : "编辑项目";
 
         // 实例化对话框ViewModel，传入一个回调委托（Action<bool>）
         // ok = true：代表用户点了【确定】；ok = false：代表【取消】
@@ -26,7 +32,7 @@ public partial class ProjectDialog : Window
         {
             DialogResult = ok;
             Close();
-        });
+        }, existing);
 
         DataContext = ViewModel;
     }

@@ -50,6 +50,7 @@ public partial class ProjectsViewModel : ViewModelBase
     // NotifyCanExecuteChangedFor：选中变化时，通知 DeleteProjectCommand（删除按钮）重新判断能否点击
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DeleteProjectCommand))]
+    [NotifyCanExecuteChangedFor(nameof(EditProjectCommand))] //选中变化也通知编辑按钮
     private Project? _selectedProject;
     
     /// <summary>
@@ -157,4 +158,27 @@ public partial class ProjectsViewModel : ViewModelBase
         // ③重新加载列表，让新项目立即显示出来
         await LoadProjectsAsync();
     }
+
+    /// <summary>
+    /// 点"编辑"：打开对话框（预填当前选中项目）→ 确定后更新数据库 → 刷新列表
+    /// CanExecute = nameof(CanEditProject)：没选中项目时按钮自动置灰
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanEditProject))]
+    private async Task EditProjectAsync()
+    {
+        if (SelectedProject is null)
+            return;
+
+        var project = SelectedProject;
+
+        // 弹出编辑弹窗，把选中的项目传进去，弹窗自动预填原有信息
+        var result = _dialogService.ShowProjectDialog(project);
+        if (result is null) return; //用户取消
+
+        await _projectService.UpdateAsync(result);//保存修改到数据库
+
+        await LoadProjectsAsync();//刷新列表
+    }
+    /// <summary>编辑按钮只有在选中了项目时才可点击。</summary>
+    private bool CanEditProject() => SelectedProject is not null;
 }

@@ -20,12 +20,12 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 - ✅ 数据层：`TaskItem` / `Project` / `Tag` 实体，EF Core + SQLite
 - ✅ 任务服务：CRUD、分页、关键字搜索（`ITaskService` / `TaskService`）
 - ✅ 任务列表页：搜索、分页、新增、删除选中任务
+- ✅ 项目管理页：列表展示、关键字搜索、筛选、新建 / 编辑 / 删除（复用式对话框 + 预设颜色 + 基础校验）
 - ✅ 异步加载与取消：`CancellationTokenSource` 处理快速搜索/翻页的竞态
 - ✅ 自定义分页控件 `PaginationControl`：依赖属性、`GoToPageCommand`、ControlTemplate 默认样式
 - ✅ 浅色 / 深色主题切换：语义色资源字典 + `DynamicResource` 运行时切换
 
 ### 规划中
-- ⬜ 项目管理页（CRUD、搜索、筛选）
 - ⬜ 仪表盘统计图表（LiveCharts2）
 - ⬜ 任务编辑对话框与表单验证
 - ⬜ 列排序、CSV 导入导出
@@ -68,8 +68,10 @@ TaskFlow/
 ├── ViewModels/
 │   ├── MainViewModel.cs          # 导航与页面切换
 │   ├── ViewModelBase.cs          # ViewModel 基类
-│   └── Pages/                    # 各页面 ViewModel
-├── Views/                        # 各页面视图
+│   ├── Pages/                    # 各页面 ViewModel
+│   └── Dialogs/                  # 对话框 ViewModel
+├── Views/
+│   └── Dialogs/                  # 对话框窗口（页面视图位于本目录）
 ├── Models/                       # 实体与 DTO
 ├── Services/                     # 业务服务
 ├── Data/                         # DbContext、工厂、种子数据
@@ -108,7 +110,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 
 ## Roadmap
 
-- [ ] 项目管理页
+- [x] 项目管理页
 - [ ] 仪表盘（LiveCharts2 图表）
 - [x] 主题切换
 - [ ] 表单验证与编辑对话框

@@ -49,11 +49,11 @@ public class ProjectService : IProjectService
     }
 
     /// <summary>
-    /// 根据任务id删除项目
+    /// 根据项目id删除项目
     /// </summary>
-    /// <param name="id">待删除任务的主键ID</param>
+    /// <param name="id">待删除项目的主键ID</param>
     /// <param name="cancellationToken">取消令牌</param>
-    /// <returns>删除成功返回true；任务不存在返回false</returns>
+    /// <returns>删除成功返回true；项目不存在返回false</returns>
     public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         // 每次操作独立创建 DbContext，await using 保证结束时释放
@@ -81,5 +81,26 @@ public class ProjectService : IProjectService
         await db.SaveChangesAsync(cancellationToken); //真正写入数据库
         
         return project; // 返回时Id已被数据库生成并回填
+    }
+
+    /// <summary>
+    /// 更新项目信息
+    /// </summary>
+    public async Task<Project> UpdateAsync(Project project, CancellationToken cancellationToken = default)
+    {
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
+        // 根据Id查询数据库中已存在的项目，查询出来的实体会被EF Core跟踪
+        var existing = await db.Projects.FirstOrDefaultAsync(p => p.Id == project.Id, cancellationToken);
+        if (existing is null)
+            throw new InvalidOperationException($"要编辑的项目（Id={project.Id}）不存在");
+
+        // 只更新允许修改的三个字段，CreatedAt Id等其他字段保持原样不动
+        existing.Name = project.Name;
+        existing.Description = project.Description;
+        existing.Color = project.Color;
+
+        await db.SaveChangesAsync(cancellationToken);
+        return existing;
     }
 }

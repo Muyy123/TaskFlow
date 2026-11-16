@@ -25,6 +25,7 @@
                 <ColumnDefinition Width="*"/>  <!--搜索框占满剩余宽度-->
                 <ColumnDefinition Width="Auto"/> <!--复选框按内容自适应-->
                 <ColumnDefinition Width="Auto"/> <!--按钮按内容自适应-->
+                <ColumnDefinition Width="Auto"/> <!--编辑按钮按内容自适应-->
                 <ColumnDefinition Width="Auto"/> <!--删除按钮按内容自适应-->
             </Grid.ColumnDefinitions>
 
@@ -54,8 +55,14 @@
                     Command="{Binding SearchCommand}"
                     Padding="16,5"
                     Margin="8,0,0,0"/>
-            <!--删除按钮：绑定 DeleteProjectCommand，没选中项目时 Command 的 CanExecute 返回 false，按钮自动禁用-->
+            <!--编辑按钮：绑定EditProjectCommand，没选中项目时自动禁用-->
             <Button Grid.Column="4"
+                    Content="编辑"
+                    Command="{Binding EditProjectCommand}"
+                    Padding="16, 5"
+                    Margin="8, 0, 0, 0"/>
+            <!--删除按钮：绑定 DeleteProjectCommand，没选中项目时 Command 的 CanExecute 返回 false，按钮自动禁用-->
+            <Button Grid.Column="5"
                     Content="删除选择"
                     Command="{Binding DeleteProjectCommand}"
                     Padding="16, 5"

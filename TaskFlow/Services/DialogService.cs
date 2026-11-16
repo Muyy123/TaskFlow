@@ -29,7 +29,7 @@ public class DialogService : IDialogService
     public Project? ShowProjectDialog(Project? existing = null)
     {
         // 创建对话框窗口
-        var dialog = new ProjectDialog { Owner = Application.Current.MainWindow };
+        var dialog = new ProjectDialog(existing) { Owner = Application.Current.MainWindow };
 
         // ShowDialog()模态弹窗：代码会在这里阻塞，直至弹窗关闭
         // 返回值：true=点了“确定”，false/null=取消或者点了×

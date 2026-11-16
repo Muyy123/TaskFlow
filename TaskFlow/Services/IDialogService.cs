@@ -1,4 +1,6 @@
-﻿namespace TaskFlow.Services;
+﻿using TaskFlow.Models;
+
+namespace TaskFlow.Services;
 
 /// <summary>
 /// 对话框服务接口
@@ -13,4 +15,10 @@ public interface IDialogService
     /// 返回true=用户点了“是”，false=“否”
     /// <returns></returns>
     bool Confirm(string message, string title = "确认");
+    /// <summary>
+    /// 打开"项目编辑"对话框
+    /// </summary>
+    /// <param name="existing">传null表示“新建”，传已有项目表示“编辑”</param>
+    /// <returns>用户填好的项目</returns>
+    Project? ShowProjectDialog(Project? existing = null);
 }

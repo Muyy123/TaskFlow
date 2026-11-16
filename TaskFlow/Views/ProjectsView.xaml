@@ -8,46 +8,54 @@
       d:DesignHeight="500" d:DesignWidth="900"
       d:DataContext="{d:DesignInstance Type=vm:ProjectsViewModel}">
 
-    <Grid>
+    <Grid Margin="6">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!--第一行：搜索/筛选工具栏-->
+            <!--第0行：搜索/筛选工具栏-->
             <RowDefinition Height="Auto"/>
-            <!--第二行：加载进度条-->
+            <!--第1行：加载进度条-->
             <RowDefinition Height="*"/>
-            <!--第三行：表格+空状态，占满剩余高度-->
+            <!--第2行：表格+空状态，占满剩余高度-->
         </Grid.RowDefinitions>
 
-        <!--第0行：搜索+筛选-->
+        <!--第0行：搜索+筛选+新建-->
         <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/> <!--新建按钮按内容自适应-->
                 <ColumnDefinition Width="*"/>  <!--搜索框占满剩余宽度-->
                 <ColumnDefinition Width="Auto"/> <!--复选框按内容自适应-->
                 <ColumnDefinition Width="Auto"/> <!--按钮按内容自适应-->
                 <ColumnDefinition Width="Auto"/> <!--删除按钮按内容自适应-->
             </Grid.ColumnDefinitions>
 
+            <!--新建项目按钮：绑定AddProjectCommand，点击打开新建对话框-->
+            <Button Grid.Column="0"
+                    Content="新建项目"
+                    Command="{Binding AddProjectCommand}"
+                    Padding="16,5"
+                    Margin="0,0,8,0"/>
+
             <!--搜索输入框 UpdateSourceTrigger=PropertyChanged: 每敲一个字就立即更新SearchText-->
-            <TextBox Grid.Column="0"
+            <TextBox Grid.Column="1"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                      Padding="6,4" VerticalContentAlignment="Center"/>
 
             <!--筛选复选框：仅显示有任务的项目 
             IsChecked 双向绑定 HasTasks，勾选变化会触发 OnHasTasksChanged 重新加载o-->
-            <CheckBox Grid.Column="1"
+            <CheckBox Grid.Column="2"
                       Content="仅显示有任务"
                       IsChecked="{Binding HasTasks}"
                       VerticalAlignment="Center" Margin="12,0,0,0"
                       Foreground="{DynamicResource TextPrimaryBrush}"/>
 
             <!--搜索按钮, 绑定ViewModel里的SearchCommand命令，点击触发重新加载项目列表-->
-            <Button Grid.Column="2"
+            <Button Grid.Column="3"
                     Content="搜索"
                     Command="{Binding SearchCommand}"
                     Padding="16,5"
                     Margin="8,0,0,0"/>
             <!--删除按钮：绑定 DeleteProjectCommand，没选中项目时 Command 的 CanExecute 返回 false，按钮自动禁用-->
-            <Button Grid.Column="3"
+            <Button Grid.Column="4"
                     Content="删除选择"
                     Command="{Binding DeleteProjectCommand}"
                     Padding="16, 5"

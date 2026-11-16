@@ -19,4 +19,9 @@ public interface IProjectService
     /// 删除指定项目
     /// </summary>
     Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// 新建项目
+    /// </summary>
+    /// <returns>保存后的项目（此时Id、CreatedAt已被填充）</returns>
+    Task<Project> CreateAsync(Project project, CancellationToken cancellationToken = default);
 }

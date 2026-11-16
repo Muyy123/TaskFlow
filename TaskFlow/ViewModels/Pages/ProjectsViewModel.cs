@@ -139,4 +139,22 @@ public partial class ProjectsViewModel : ViewModelBase
     /// </summary>
     /// <returns></returns>
     private bool CanDeleteProject() => SelectedProject is not null;
+
+    /// <summary>
+    /// 点“新建项目”：打开对话框 -> 用户确定后保存到数据库 -> 刷新列表
+    /// </summary>
+    [RelayCommand]
+    private async Task AddProjectAsync()
+    {
+        // ①打开新建项目对话框（传null表示新建）
+        var project = _dialogService.ShowProjectDialog();
+        if (project is null)
+            return; // 用户点了取消，什么都不做
+
+        // ②调用服务层方法，把用户填好的数据保存到数据库
+        await _projectService.CreateAsync(project);
+
+        // ③重新加载列表，让新项目立即显示出来
+        await LoadProjectsAsync();
+    }
 }

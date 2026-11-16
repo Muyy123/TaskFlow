@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using TaskFlow.Models;
+using TaskFlow.Views.Dialogs;
 
 namespace TaskFlow.Services;
 
@@ -17,5 +19,23 @@ public class DialogService : IDialogService
             MessageBoxImage.Warning);//删除操作用警示图标
 
         return result == MessageBoxResult.Yes;
+    }
+
+    /// <summary>
+    /// 弹出新增/编辑项目弹窗，处理弹窗交互并返回结果
+    /// </summary>
+    /// <param name="existing">传null表示“新建”，传已有项目表示“编辑”</param>
+    /// <returns>用户点击确定返回项目对象；取消/关闭弹窗返回null</returns>
+    public Project? ShowProjectDialog(Project? existing = null)
+    {
+        // 创建对话框窗口
+        var dialog = new ProjectDialog { Owner = Application.Current.MainWindow };
+
+        // ShowDialog()模态弹窗：代码会在这里阻塞，直至弹窗关闭
+        // 返回值：true=点了“确定”，false/null=取消或者点了×
+        var success = dialog.ShowDialog() == true;
+
+        // 用户点确定：取出弹窗ViewModel里组装好的项目数据返回；取消则返回null
+        return success ? dialog.ViewModel.Result : null;
     }
 }

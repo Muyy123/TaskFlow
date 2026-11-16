@@ -70,4 +70,16 @@ public class ProjectService : IProjectService
         await db.SaveChangesAsync(cancellationToken);
         return true;
     }
+
+    public async Task<Project> CreateAsync(Project project, CancellationToken cancellationToken = default)
+    {
+        // 每次操作独立创建DbContext
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
+        project.CreatedAt = DateTime.UtcNow; //记录创建时间
+        db.Projects.Add(project); //告诉EF Core这个对象是新的，等下保存的时候要执行INSERT
+        await db.SaveChangesAsync(cancellationToken); //真正写入数据库
+        
+        return project; // 返回时Id已被数据库生成并回填
+    }
 }

@@ -21,4 +21,11 @@ public interface IDialogService
     /// <param name="existing">传null表示“新建”，传已有项目表示“编辑”</param>
     /// <returns>用户填好的项目</returns>
     Project? ShowProjectDialog(Project? existing = null);
+
+    /// <summary>
+    /// 打开"任务编辑"对话框
+    /// existing：传 null 表示"新建"，传已有任务表示"编辑"
+    /// 返回：用户填好的任务（点确定），或 null（取消）
+    /// </summary>
+    TaskItem? ShowTaskDialog(TaskItem? existing = null);
 }

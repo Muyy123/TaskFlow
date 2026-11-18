@@ -1,0 +1,80 @@
+﻿<Window x:Class="TaskFlow.Views.Dialogs.TaskDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="新建任务"
+        Width="440" SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource ContentBackgroundBrush}">
+    <StackPanel Margin="24">
+        <!--①任务标题-->
+        <TextBlock Text="标题" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,4,0,0"/>
+        <!-- UpdateSourceTrigger=PropertyChanged：每输入一个字符就同步到ViewModel，实时校验 -->
+        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                 MaxLength="200" Padding="6,4"/>
+        <!--标题为空时的红色错误提示-->
+        <TextBlock Text="标题不能为空" Foreground="Red" FontSize="12" Margin="0,4,0,0">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <!-- 默认隐藏提示 -->
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <!-- 当绑定的Title为空字符串时，显示错误提示 -->
+                        <DataTrigger Binding="{Binding Title}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <!--②描述（可空，多行）-->
+        <TextBlock Text="描述" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,16,0,0"/>
+        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                 MaxLength="1000" AcceptsReturn="True" Height="60"
+                 TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Padding="6,4"/>
+
+        <!--③状态下拉框-->
+        <TextBlock Text="状态" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,16,0,6"/>
+        <!-- 绑定状态枚举集合，ItemTemplate使用转换器，枚举英文转为中文展示 -->
+        <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding Status}" Padding="6,4">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumToChinese}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <!--④优先级下拉框-->
+        <TextBlock Text="优先级" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,16,0,6"/>
+        <!-- 绑定状态枚举集合，ItemTemplate使用转换器，枚举英文转为中文展示 -->
+        <ComboBox ItemsSource="{Binding PriorityOptions}" SelectedItem="{Binding Priority}" Padding="6,4">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumToChinese}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <!--⑤截止日期（可空）-->
+        <TextBlock Text="截止日期" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,16,0,4"/>
+        <DatePicker SelectedDate="{Binding DueDate}"/>
+
+        <!--⑥ 所属项目下拉框，包含【无项目】选项-->
+        <TextBlock Text="所属项目" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,16,0,4"/>
+        <!--
+            DisplayMemberPath：界面展示的文本（DisplayName）
+            SelectedValuePath：后台绑定的值（ProjectId）
+            SelectedValue：双向绑定到ViewModel的SelectedProjectId，null代表无项目
+        -->
+        <ComboBox ItemsSource="{Binding ProjectOptions}"
+                  DisplayMemberPath="DisplayName"
+                  SelectedValuePath="ProjectId"
+                  SelectedValue="{Binding SelectedProjectId}" Padding="6,4"/>
+        
+        <!--⑦按钮-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,8,0">
+            <Button Content="取消" Command="{Binding CancelCommand}" Padding="20,6" Margin="0,0,8,0"/>
+            <Button Content="确定" Command="{Binding SaveCommand}" Padding="20,6"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

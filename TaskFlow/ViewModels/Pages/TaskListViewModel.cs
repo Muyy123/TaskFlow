@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TaskFlow.Models;
 using TaskFlow.Models.Dtos;
-using TaskFlow.Models.Enums;
 using TaskFlow.Services;
 
 namespace TaskFlow.ViewModels.Pages;
@@ -15,11 +14,13 @@ namespace TaskFlow.ViewModels.Pages;
 public partial class TaskListViewModel : ViewModelBase
 {
     private readonly ITaskService _taskService;
+    private readonly IDialogService _dialogService; // 用来弹任务对话框
     private CancellationTokenSource? _loadCts;
 
-    public TaskListViewModel(ITaskService taskService)
+    public TaskListViewModel(ITaskService taskService, IDialogService dialogService)
     {
         _taskService = taskService;
+        _dialogService = dialogService;
 
         // 首次进入即加载数据（fire-and-forget，取消相关异常已在 LoadTasksAsync 内处理）
         _ = LoadTasksAsync();
@@ -116,18 +117,21 @@ public partial class TaskListViewModel : ViewModelBase
 
     private bool CanDeleteTask() => SelectedTask is not null;
 
+
+    /// <summary>
+    /// 点"新建任务"：打开对话框 → 用户确定后保存到数据库 → 刷新列表
+    /// </summary>
     [RelayCommand]
     private async Task AddTaskAsync()
     {
-        // 暂以默认值创建示例任务；后续接入编辑对话框后改为打开对话框
-        var task = new TaskItem
-        {
-            Title = $"新建任务 {DateTime.Now:MM-dd HH:mm:ss}",
-            Status = TaskItemStatus.Todo,
-            Priority = Priority.Medium,
-        };
+        // 打开新建任务弹窗(传null表示新建)
+        var task = _dialogService.ShowTaskDialog();
+        if (task is null)
+            return; //用户取消
 
+        // 保存到数据库
         await _taskService.CreateAsync(task);
+        //刷新列表
         await LoadTasksAsync();
     }
 

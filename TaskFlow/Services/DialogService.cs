@@ -10,6 +10,12 @@ namespace TaskFlow.Services;
 /// </summary>
 public class DialogService : IDialogService
 {
+    private readonly IProjectService _projectService; //供任务对话框加载“所属项目”列表
+
+    public DialogService(IProjectService projectService)
+    {
+        _projectService = projectService;
+    }
     public bool Confirm(string message, string title = "确认")
     {
         var result = MessageBox.Show(
@@ -36,6 +42,18 @@ public class DialogService : IDialogService
         var success = dialog.ShowDialog() == true;
 
         // 用户点确定：取出弹窗ViewModel里组装好的项目数据返回；取消则返回null
+        return success ? dialog.ViewModel.Result : null;
+    }
+
+    /// <summary>
+    /// 弹出新增/编辑任务弹窗，处理弹窗交互并返回结果
+    /// </summary>                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+    public TaskItem? ShowTaskDialog(TaskItem? existing = null)
+    {
+        var dialog = new TaskDialog(_projectService, existing) { Owner= Application.Current.MainWindow};
+
+        var success = dialog.ShowDialog() == true;
+
         return success ? dialog.ViewModel.Result : null;
     }
 }

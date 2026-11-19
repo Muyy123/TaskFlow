@@ -33,6 +33,7 @@ public partial class TaskListViewModel : ViewModelBase
     /// <summary>表格当前选中行。</summary>
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DeleteTaskCommand))]
+    [NotifyCanExecuteChangedFor(nameof(EditTaskCommand))]
     private TaskItem? _selectedTask;
 
     /// <summary>搜索关键字。</summary>
@@ -134,6 +135,25 @@ public partial class TaskListViewModel : ViewModelBase
         //刷新列表
         await LoadTasksAsync();
     }
+
+    [RelayCommand(CanExecute = nameof(CanEditTask))]
+    private async Task EditTaskAsync()
+    {
+        if (SelectedTask is null)
+            return;
+
+        // 把选中的任务传给弹窗，作为existing，弹窗会自动预填表单
+        var task = _dialogService.ShowTaskDialog(SelectedTask);
+        if (task is null) return;//用户取消
+
+        await _taskService.UpdateAsync(task);
+        await LoadTasksAsync();
+    }
+
+    /// <summary>
+    /// 编辑按钮可用判断：必须选中一条任务
+    /// </summary>
+    private bool CanEditTask() => SelectedTask is not null;
 
     /// <summary>分页控件跳转到指定页。</summary>
     [RelayCommand]

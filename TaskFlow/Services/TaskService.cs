@@ -85,9 +85,27 @@ public class TaskService : ITaskService
     public async Task<TaskItem> UpdateAsync(TaskItem task, CancellationToken cancellationToken = default)
     {
         await using var db = await _factory.CreateDbContextAsync(cancellationToken);
-        db.Tasks.Update(task);
+
+        // 先从数据库取出原纪录（而不是直接db.Update整个实体）
+        var existing = await db.Tasks.FirstOrDefaultAsync(t => t.Id == task.Id, cancellationToken);
+        if (existing is null)
+            throw new InvalidOperationException($"要编辑的任务(Id={task.Id})不存在");
+
+        // 只更新允许用户编辑的字段
+        // CreatedAt 是创建时间，不允许修改；导航属性Tags、Project也不在这里覆盖
+        existing.Title = task.Title;
+        existing.Description = task.Description;
+        existing.Status = task.Status;
+        existing.Priority = task.Priority;
+        existing.DueDate = task.DueDate;
+        // CompletedAt 的联动逻辑已经在 TaskDialogViewModel 里处理好了，这里直接赋值结果
+        existing.CompletedAt = task.CompletedAt;
+        existing.ProjectId = task.ProjectId;
+
+        // 提交改动到数据库
         await db.SaveChangesAsync(cancellationToken);
-        return task;
+        // 返回数据库里最新的这条任务
+        return existing;
     }
 
     /// <summary>

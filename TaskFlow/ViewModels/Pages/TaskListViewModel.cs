@@ -111,8 +111,18 @@ public partial class TaskListViewModel : ViewModelBase
         if (SelectedTask is null)
             return;
 
-        var task = SelectedTask;
-        await _taskService.DeleteAsync(task.Id);
+        var task = SelectedTask; //先存引用，防止后续选中状态变化
+
+        // 弹出确认弹窗
+        var message = $"确认要删除任务{task.Title}吗? 此操作不可撤销。";
+        if (!_dialogService.Confirm(message, "删除任务"))
+            return; //用户点了否，直接取消
+
+        var success = await _taskService.DeleteAsync(task.Id);
+        if (!success)
+            return;// 删除失败，任务已经不存在
+
+        // 删除成功，重新加载任务列表
         await LoadTasksAsync();
     }
 

@@ -19,7 +19,8 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 - ✅ 项目骨架：Generic Host 依赖注入、分层架构
 - ✅ 数据层：`TaskItem` / `Project` / `Tag` 实体，EF Core + SQLite
 - ✅ 任务服务：CRUD、分页、关键字搜索（`ITaskService` / `TaskService`）
-- ✅ 任务列表页：搜索、分页、新增、删除选中任务
+- ✅ 任务列表页：搜索、分页、新增 / 编辑 / 删除选中任务（删除二次确认）
+- ✅ 任务编辑对话框：新建 / 编辑任务（枚举中文显示、必填校验、完成时间联动、所属项目下拉）
 - ✅ 项目管理页：列表展示、关键字搜索、筛选、新建 / 编辑 / 删除（复用式对话框 + 预设颜色 + 基础校验）
 - ✅ 异步加载与取消：`CancellationTokenSource` 处理快速搜索/翻页的竞态
 - ✅ 自定义分页控件 `PaginationControl`：依赖属性、`GoToPageCommand`、ControlTemplate 默认样式
@@ -27,7 +28,6 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 
 ### 规划中
 - ⬜ 仪表盘统计图表（LiveCharts2）
-- ⬜ 任务编辑对话框与表单验证
 - ⬜ 列排序、CSV 导入导出
 - ⬜ 单元测试
 
@@ -113,7 +113,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - [x] 项目管理页
 - [ ] 仪表盘（LiveCharts2 图表）
 - [x] 主题切换
-- [ ] 表单验证与编辑对话框
+- [x] 表单验证与编辑对话框
 - [ ] 排序与 CSV 导入导出
 - [ ] xUnit 单元测试
 - [ ] EF Core Migrations

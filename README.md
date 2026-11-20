@@ -25,9 +25,9 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 - ✅ 异步加载与取消：`CancellationTokenSource` 处理快速搜索/翻页的竞态
 - ✅ 自定义分页控件 `PaginationControl`：依赖属性、`GoToPageCommand`、ControlTemplate 默认样式
 - ✅ 浅色 / 深色主题切换：语义色资源字典 + `DynamicResource` 运行时切换
+- ✅ 仪表盘：KPI 统计卡片、状态分布饼图、项目任务数柱状图（LiveCharts2）
 
 ### 规划中
-- ⬜ 仪表盘统计图表（LiveCharts2）
 - ⬜ 列排序、CSV 导入导出
 - ⬜ 单元测试
 
@@ -111,7 +111,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 ## Roadmap
 
 - [x] 项目管理页
-- [ ] 仪表盘（LiveCharts2 图表）
+- [x] 仪表盘（LiveCharts2 图表）
 - [x] 主题切换
 - [x] 表单验证与编辑对话框
 - [ ] 排序与 CSV 导入导出

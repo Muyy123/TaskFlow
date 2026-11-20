@@ -64,20 +64,45 @@
                 </StackPanel>
             </Border>
         </Grid>
-        
-        <!--状态分布饼图-->
-        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}"
-                CornerRadius="8" Margin="0,16,0,0" Padding="16">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="任务状态分布" Foreground="{DynamicResource TextPrimaryBrush}"
-                           FontSize="16" FontWeight="Bold"/>
-                <!-- PieChart：Series 绑定到 VM 的 StatusSeries -->
-                <lvc:PieChart Grid.Row="1" Series="{Binding StatusSeries}"/>
-            </Grid>
-        </Border>
+
+        <Grid Grid.Row="2" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--状态分布饼图-->
+            <Border Grid.Column="0" Background="{DynamicResource SurfaceBrush}"
+                    CornerRadius="8" Margin="0,0,12,0" Padding="16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="任务状态分布" Foreground="{DynamicResource TextPrimaryBrush}"
+                                FontSize="16" FontWeight="Bold"/>
+                    <!-- PieChart：Series 绑定到 VM 的 StatusSeries -->
+                    <lvc:PieChart Grid.Row="1" Series="{Binding StatusSeries}"/>
+                </Grid>
+            </Border>
+            
+            <!--项目任务数柱状图-->
+            <Border Grid.Column="1" Background="{DynamicResource SurfaceBrush}"
+                    CornerRadius="8" Padding="16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="项目任务数" Foreground="{DynamicResource TextPrimaryBrush}"
+                               FontSize="16" FontWeight="Bold"/>
+
+                    <!-- CartesianChart：柱状图需要 Series + X/Y 轴 -->
+                    <lvc:CartesianChart Grid.Row="1"
+                                        Series="{Binding ProjectSeries}"
+                                        XAxes="{Binding ProjectXAxes}"
+                                        YAxes="{Binding ProjectYAxes}"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

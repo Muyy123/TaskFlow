@@ -17,8 +17,7 @@
         <!-- ViewModel → 视图 的映射：骨架阶段用占位 TextBlock，后续替换为真实的 UserControl。
              例如 <DataTemplate DataType="{x:Type pages:DashboardViewModel}"><views:DashboardView/></DataTemplate> -->
         <DataTemplate DataType="{x:Type pages:DashboardViewModel}">
-            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="{DynamicResource TextPrimaryBrush}"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <views:DashboardView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:ProjectsViewModel}">
             <views:ProjectsView/>

@@ -6,7 +6,7 @@
     <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFFFF"/> <!--卡片/面板/表格底-->
     <SolidColorBrush x:Key="TextOnDarkBrush" Color="#FFFFFFFF"/> <!--深色背景上的文字-->
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FF333333"/> <!--主文字-->
-    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FFFFFFFF"/> <!--次要文字-->
-    <SolidColorBrush x:Key="AccentBrush" Color="#FF808080"/> <!--分页控件的高亮色）-->
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FF7A7A7A"/> <!--次要文字-->
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF4A90D9"/> <!--分页控件的高亮色）-->
     <SolidColorBrush x:Key="BorderBrush" Color="#FFD9D9D9"/> <!--边框/分割线-->
 </ResourceDictionary>

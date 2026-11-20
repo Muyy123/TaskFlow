@@ -19,4 +19,9 @@ public interface ITaskService
     Task<TaskItem> UpdateAsync(TaskItem task, CancellationToken cancellationToken = default);
 
     Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// 获取仪表盘KPI统计：总任务、待办、进行中、已完成、逾期
+    /// </summary>
+    Task<DashboardStats> GetDashboardStatsAsync(CancellationToken cancellationToken = default);
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskFlow.Data;
 using TaskFlow.Models;
 using TaskFlow.Models.Dtos;
+using TaskFlow.Models.Enums;
 
 namespace TaskFlow.Services;
 
@@ -125,5 +126,35 @@ public class TaskService : ITaskService
         db.Tasks.Remove(task);//找到了 就删除
         await db.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    /// <summary>
+    /// 聚合统计任务数量，供仪表盘展示。
+    /// 用多个 CountAsync 分别统计（SQLite 本地查询很快，可读性优先，不做复杂 GroupBy）。
+    /// </summary>
+    public async Task<DashboardStats> GetDashboardStatsAsync(CancellationToken cancellationToken = default)
+    {
+        await using var db = await _factory.CreateDbContextAsync(cancellationToken);
+
+        var now = DateTime.UtcNow;
+
+        // 分别统计三种状态的任务数量，每条CountAsync会生成一条SQL count语句
+        var todoCount = await db.Tasks.CountAsync(t => t.Status == TaskItemStatus.Todo, cancellationToken);
+        var inProgressCount = await db.Tasks.CountAsync(t => t.Status == TaskItemStatus.InProgress, cancellationToken);
+        var doneCount = await db.Tasks.CountAsync(t => t.Status == TaskItemStatus.Done, cancellationToken);
+
+        // 逾期：有截止日期、已经过了、且还没完成
+        var overdueCount = await db.Tasks.CountAsync(
+            t => t.DueDate != null && t.DueDate < now && t.Status != TaskItemStatus.Done, cancellationToken);
+
+        // 汇总数据返回DTO
+        return new DashboardStats
+        {
+            TotalCount = todoCount + inProgressCount + doneCount,
+            TodoCount = todoCount,
+            InProgressCount = inProgressCount,
+            DoneCount = doneCount,
+            OverdueCount = overdueCount,
+        };
     }
 }

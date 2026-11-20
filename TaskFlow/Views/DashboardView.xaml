@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:TaskFlow.ViewModels.Pages"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900"
              d:DataContext="{d:DesignInstance Type=vm:DashboardViewModel}">
@@ -11,6 +12,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
         <!--加载进度条-->
@@ -62,5 +64,20 @@
                 </StackPanel>
             </Border>
         </Grid>
+        
+        <!--状态分布饼图-->
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}"
+                CornerRadius="8" Margin="0,16,0,0" Padding="16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="任务状态分布" Foreground="{DynamicResource TextPrimaryBrush}"
+                           FontSize="16" FontWeight="Bold"/>
+                <!-- PieChart：Series 绑定到 VM 的 StatusSeries -->
+                <lvc:PieChart Grid.Row="1" Series="{Binding StatusSeries}"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

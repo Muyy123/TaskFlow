@@ -1,13 +1,16 @@
-using System.Windows;
-using System.IO;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SkiaSharp;
+using System.IO;
+using System.Windows;
 using TaskFlow.Data;
 using TaskFlow.Services;
+using TaskFlow.Theme;
 using TaskFlow.ViewModels;
 using TaskFlow.ViewModels.Pages;
-using TaskFlow.Theme;
 
 namespace TaskFlow;
 
@@ -23,6 +26,18 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // 全局初始化 LiveCharts2，整个程序生命周期只执行一次
+        // AddSkiaSharp()：使用SkiaSharp作为图表渲染后端
+        // AddDefaultMappers()：启用内置默认数据映射，直接支持数字、坐标点等基础类型
+        // AddLightTheme()：初始使用浅色主题；深色模式后续再做适配切换
+        LiveCharts.Configure(config => config
+            .AddSkiaSharp()
+            .AddDefaultMappers()
+            .AddLightTheme()
+            // 重点：注册中文，Skia渲染中文就会匹配系统雅黑字体
+            .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
+
         // 构建宿主
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices(ConfigureServices)

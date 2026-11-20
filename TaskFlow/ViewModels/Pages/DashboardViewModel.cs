@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using TaskFlow.Services;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace TaskFlow.ViewModels.Pages;
 
@@ -35,6 +37,10 @@ public partial class DashboardViewModel : ViewModelBase
     [ObservableProperty]
     private int _overdueCount;
 
+    /// <summary>状态分布饼图的系列数据（每个状态一个扇区）。</summary>
+    [ObservableProperty]
+    private ISeries[] _statusSeries = Array.Empty<ISeries>();
+
     /// <summary>
     /// 加载统计数据，填充各卡片数字
     /// </summary>
@@ -52,6 +58,15 @@ public partial class DashboardViewModel : ViewModelBase
             InProgressCount = stats.InProgressCount;
             DoneCount = stats.DoneCount;
             OverdueCount = stats.OverdueCount;
+
+            // 构建状态分布饼图：每个 PieSeries 是一个扇区
+            // Values 传数组（这里每个扇区只放一个值）；Name 是扇区在图例上的名字
+            StatusSeries = new ISeries[]
+            {
+                new PieSeries<double> { Values = new double[] {stats.TodoCount}, Name = "待办"},
+                new PieSeries<double> { Values = new double[] {stats.InProgressCount}, Name = "进行中"},
+                new PieSeries<double> { Values = new double[] {stats.DoneCount}, Name = "已完成"},
+            };
         }
         finally
         {

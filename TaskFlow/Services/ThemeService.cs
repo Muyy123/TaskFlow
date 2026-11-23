@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 
 namespace TaskFlow.Theme;
 public partial class ThemeService : ObservableObject
@@ -23,6 +25,13 @@ public partial class ThemeService : ObservableObject
         dicts.Insert(0, _currentTheme);//保证优先级最高，不会被项目里其他资源字典覆盖掉
 
         IsDark = dark;
+
+        // 同步切换 LiveCharts2 图表主题：
+        // 图表用 SkiaSharp 渲染，不读 WPF 的 ResourceDictionary，所以要单独应用它的浅/深主题
+        if (dark)
+            LiveCharts.DefaultSettings.AddDarkTheme();
+        else
+            LiveCharts.DefaultSettings.AddLightTheme();
     }
     public void ToggleTheme() => ApplyTheme(!IsDark);
 }

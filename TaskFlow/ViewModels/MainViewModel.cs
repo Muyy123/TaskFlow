@@ -21,6 +21,8 @@ public partial class MainViewModel : ViewModelBase
     private NavItemViewModel? _selectedNavItem;
 
     private readonly ThemeService _themeService;
+    private readonly DashboardViewModel _dashboard; //主题切换后刷新图标
+
     // 按钮文字，[ObservableProperty]自动通知ui
     [ObservableProperty]
     private string _themeButtonText = "切换深色";
@@ -34,6 +36,7 @@ public partial class MainViewModel : ViewModelBase
         SettingsViewModel settings)
     {
         _themeService = themeService;
+        _dashboard = dashboard;
         NavItems = new ObservableCollection<NavItemViewModel>
         {
             new("仪表盘", dashboard),
@@ -60,6 +63,9 @@ public partial class MainViewModel : ViewModelBase
     {
         _themeService.ApplyTheme(!_themeService.IsDark);
         ThemeButtonText = _themeService.IsDark ? "切换浅色" : "切换深色";
+
+        // 图表用 SkiaSharp 渲染，切主题后要重建 Series 触发重绘，图表颜色才会更新
+        _ = _dashboard.LoadStatsAsync();
     }
 }
 

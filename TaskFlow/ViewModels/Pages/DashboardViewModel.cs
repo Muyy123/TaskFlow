@@ -58,7 +58,7 @@ public partial class DashboardViewModel : ViewModelBase
     /// <summary>
     /// 加载统计数据，填充各卡片数字
     /// </summary>
-    private async Task LoadStatsAsync()
+    public async Task LoadStatsAsync()
     {
         IsLoading = true;
 

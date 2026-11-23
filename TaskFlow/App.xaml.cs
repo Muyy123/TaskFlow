@@ -87,9 +87,8 @@ public partial class App : Application
         var factory = AppHost.Services.GetRequiredService<IDbContextFactory<AppDbContext>>();
         using var db = factory.CreateDbContext();
 
-        // 开发期快捷建库：按当前模型直接创建表。
-        // 正式做 schema 版本管理时，改用 db.Database.Migrate() + dotnet ef migrations。
-        db.Database.EnsureCreated();
+        // 应用所有未执行的迁移，把数据库升级到最新 schema（生产级做法）
+        db.Database.Migrate();
 
         DbSeeder.SeedIfEmpty(db);
     }

@@ -99,7 +99,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 ### 数据库说明
 - 使用 SQLite，数据库文件 `taskflow.db` 在首次启动时自动创建于程序目录。
 - 首次启动会自动写入示例数据（项目、标签与若干任务），便于直接预览界面。
-- 开发阶段使用 `EnsureCreated()` 建库；生产环境将迁移到 EF Core Migrations。
+- 使用 EF Core Migrations 建库：首次运行自动应用迁移（`Migrate()`）并写入示例数据。
 
 ## 项目亮点
 
@@ -107,6 +107,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - **异步竞态处理**：加载任务时使用 `CancellationTokenSource` 取消上一次未完成的请求，避免快速搜索/翻页时旧结果覆盖新结果。
 - **自定义控件**：`PaginationControl` 继承 `Control`，通过依赖属性、只读计算属性与 `ControlTemplate` 实现，外观与逻辑分离，默认样式经 `ThemeInfo` 定位。
 - **运行时主题切换**：以两套语义色 `ResourceDictionary` 定义浅色/深色主题，通过 `DynamicResource` 与 `ThemeService` 在运行时替换字典实现整体换肤。
+- **EF Core Migrations**：通过 `dotnet ef` 生成迁移，运行时用 `Migrate()` 做 schema 版本演进，替代 `EnsureCreated()`。
 
 ## Roadmap
 
@@ -116,7 +117,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - [x] 表单验证与编辑对话框
 - [ ] 排序与 CSV 导入导出
 - [ ] xUnit 单元测试
-- [ ] EF Core Migrations
+- [x] EF Core Migrations
 
 ## 许可证
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using TaskFlow.Data;
 using TaskFlow.Models;
 using TaskFlow.Models.Dtos;
@@ -12,10 +13,12 @@ namespace TaskFlow.Services;
 public class ProjectService : IProjectService
 {
     private readonly IDbContextFactory<AppDbContext> _factory;
+    private readonly ILogger<ProjectService> _logger; //结构化日志
 
-    public ProjectService(IDbContextFactory<AppDbContext> factory)
+    public ProjectService(IDbContextFactory<AppDbContext> factory, ILogger<ProjectService> logger)
     {
         _factory = factory;
+        _logger = logger;
     }
 
     public async Task<IReadOnlyList<Project>> GetListAsync(ProjectFilter filter, CancellationToken cancellationToken = default)
@@ -68,6 +71,8 @@ public class ProjectService : IProjectService
         // SaveChanges 时，EF Core 会按 AppDbContext 里配好的删除行为（SetNull）
         // 所以该项目的任务会保留，只是变成"未分类"。
         await db.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("删除项目：Id={Id}", id);
         return true;
     }
 
@@ -79,7 +84,8 @@ public class ProjectService : IProjectService
         project.CreatedAt = DateTime.UtcNow; //记录创建时间
         db.Projects.Add(project); //告诉EF Core这个对象是新的，等下保存的时候要执行INSERT
         await db.SaveChangesAsync(cancellationToken); //真正写入数据库
-        
+
+        _logger.LogInformation("创建项目：{Name}（Id={Id}）", project.Name, project.Id);
         return project; // 返回时Id已被数据库生成并回填
     }
 
@@ -101,6 +107,8 @@ public class ProjectService : IProjectService
         existing.Color = project.Color;
 
         await db.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("更新项目：Id={Id}", project.Id);
         return existing;
     }
 }

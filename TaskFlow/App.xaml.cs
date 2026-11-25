@@ -1,3 +1,4 @@
+using Serilog;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Microsoft.EntityFrameworkCore;
@@ -38,12 +39,18 @@ public partial class App : Application
             // 重点：注册中文，Skia渲染中文就会匹配系统雅黑字体
             .HasGlobalSKTypeface(SKFontManager.Default.MatchCharacter('汉')));
 
-        // 构建宿主
+        // 构建宿主（接入Serilog：日志写文件，按天滚动）
         AppHost = Host.CreateDefaultBuilder()
+            .UseSerilog((context, configuration) => configuration
+                .MinimumLevel.Information()
+                .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day))
             .ConfigureServices(ConfigureServices)
             .Build();
 
         AppHost.StartAsync().GetAwaiter().GetResult();
+
+        // 记录启动日志
+        Log.Information("TaskFlow应用启动");
 
         // 初始化 默认浅色主题
         var theme = AppHost.Services.GetRequiredService<ThemeService>();
@@ -95,8 +102,13 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        Log.Information("TaskFlow应用退出");
         AppHost.StopAsync().GetAwaiter().GetResult();
         AppHost.Dispose();
+
+        // 确保日志全部写入磁盘后再退出
+        Log.CloseAndFlush();
+
         base.OnExit(e);
     }
 }

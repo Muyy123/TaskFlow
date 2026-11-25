@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using TaskFlow.Data;
 using TaskFlow.Models;
@@ -14,10 +15,13 @@ namespace TaskFlow.Services;
 public class TaskService : ITaskService
 {
     private readonly IDbContextFactory<AppDbContext> _factory;
+    private readonly ILogger<TaskService> _logger; //结构化日志
 
-    public TaskService(IDbContextFactory<AppDbContext> factory)
+    public TaskService(IDbContextFactory<AppDbContext> factory, ILogger<TaskService> logger)
     {
         _factory = factory;
+        _logger = logger;
+
     }
 
     public async Task<TaskItem?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -80,6 +84,8 @@ public class TaskService : ITaskService
         task.CreatedAt = DateTime.UtcNow;
         db.Tasks.Add(task);
         await db.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("创建任务：{Title}（Id={Id}）", task.Title, task.Id);
         return task;
     }
 
@@ -105,6 +111,8 @@ public class TaskService : ITaskService
 
         // 提交改动到数据库
         await db.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("更新任务：Id={Id}", task.Id);
         // 返回数据库里最新的这条任务
         return existing;
     }
@@ -125,6 +133,8 @@ public class TaskService : ITaskService
 
         db.Tasks.Remove(task);//找到了 就删除
         await db.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("删除任务：Id={Id}", id);
         return true;
     }
 

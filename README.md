@@ -24,7 +24,7 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 - ✅ 项目管理页：列表展示、关键字搜索、筛选、新建 / 编辑 / 删除（复用式对话框 + 预设颜色 + 基础校验）
 - ✅ 异步加载与取消：`CancellationTokenSource` 处理快速搜索/翻页的竞态
 - ✅ 自定义分页控件 `PaginationControl`：依赖属性、`GoToPageCommand`、ControlTemplate 默认样式
-- ✅ 浅色 / 深色主题切换：语义色资源字典 + `DynamicResource` 运行时切换
+- ✅ 浅色 / 深色主题切换：语义色资源字典 + `DynamicResource` 运行时切换；常用控件深色适配（隐式样式 + ControlTemplate）
 - ✅ 仪表盘：KPI 统计卡片、状态分布饼图、项目任务数柱状图（LiveCharts2）
 - ✅ 结构化日志：Serilog 落文件（按天滚动）+ 服务层关键操作日志
 
@@ -107,7 +107,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - **短生命周期 DbContext**：通过 `IDbContextFactory<AppDbContext>` 在每次操作中创建独立上下文，避免桌面应用中实体长期被跟踪导致的累积问题。
 - **异步竞态处理**：加载任务时使用 `CancellationTokenSource` 取消上一次未完成的请求，避免快速搜索/翻页时旧结果覆盖新结果。
 - **自定义控件**：`PaginationControl` 继承 `Control`，通过依赖属性、只读计算属性与 `ControlTemplate` 实现，外观与逻辑分离，默认样式经 `ThemeInfo` 定位。
-- **运行时主题切换**：以两套语义色 `ResourceDictionary` 定义浅色/深色主题，通过 `DynamicResource` 与 `ThemeService` 在运行时替换字典实现整体换肤。
+- **运行时主题切换**：以两套语义色 `ResourceDictionary` 定义浅色/深色主题，通过 `DynamicResource` 与 `ThemeService` 在运行时替换字典实现整体换肤；控件深色适配用隐式样式 + ControlTemplate 实现。
 - **EF Core Migrations**：通过 `dotnet ef` 生成迁移，运行时用 `Migrate()` 做 schema 版本演进，替代 `EnsureCreated()`。
 - **结构化日志**：`ILogger<T>` 抽象 + Serilog 落文件，服务层记录关键操作，日志模板捕获结构化属性。
 

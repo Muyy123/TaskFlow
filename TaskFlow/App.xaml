@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- 后续在此合并主题资源：
                      Themes/Light.xaml 与 Themes/Dark.xaml 由 ThemeService 在运行时动态切换。 -->
+                <ResourceDictionary Source="/Themes/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- 全局转换器：枚举 → 中文（任务列表、任务对话框都会用到） -->

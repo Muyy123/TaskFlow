@@ -1,0 +1,83 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 隐式样式：没写 x:Key, 会自动套到所有TextBox上 -->
+    <Style TargetType="TextBox">
+        <!--背景（深色主题=白，浅色主题=深灰）-->
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <!--文字颜色（深色主题=深灰，浅色主题=浅灰）-->
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <!--边框颜色-->
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <!--光标颜色：默认是黑色，深色下看不到，改成跟随文字色-->
+        <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+    </Style>
+
+    <!-- 隐式样式：自动套到所有 Button 上
+         自定义模板，控制悬停/按下/禁用状态-->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <!-- 鼠标悬停变成手型，提示可点击 -->
+        <Setter Property="Cursor" Value="Hand"/>
+        
+        <!--自定义控件模板：用Border + 组成按钮
+            重写Button内部的结构，替换系统默认按钮样式-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <!-- x:Name 让触发器能改到它；TemplateBinding 从 Button 拿背景/边框/内边距 -->
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <!--按钮文字-->
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- 触发器集合：监听控件状态变化，自动修改样式 -->
+                    <ControlTemplate.Triggers>
+                        <!--悬停：蓝色底 + 浅色字-->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextOnDarkBrush}"/>
+                        </Trigger>
+                        <!--按下：变暗一点-->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                        </Trigger>
+                        <!--禁用：半透明（对应"编辑/删除"没选中时的状态）-->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--DataGrid是复合控件，要写三个样式-->
+    <!--DataGrid 整体：背景、行底色、网格线-->
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <!--每一行（未选中）的底色-->
+        <Setter Property="RowBackground" Value="{DynamicResource SurfaceBrush}"/>
+        <!--横竖网格线颜色-->
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource BorderBrush}"/>
+    </Style>
+
+    <!--表头：用内容区底色（比行略深/略浅，形成层次）-->
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource ContentBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="Padding" Value="10,6"/>
+    </Style>
+</ResourceDictionary>

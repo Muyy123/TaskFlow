@@ -26,8 +26,7 @@
             <views:TaskListView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type pages:SettingsViewModel}">
-            <TextBlock Text="{Binding Title}" FontSize="24" Foreground="{DynamicResource TextPrimaryBrush}"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <views:SettingsView/>
         </DataTemplate>
     </Window.Resources>
 
@@ -44,7 +43,7 @@
                            Text="TaskFlow"
                            Foreground="{DynamicResource TextOnDarkBrush}" FontSize="18" FontWeight="Bold"
                            VerticalAlignment="Center" Margin="16,0,0,0"/>
-                <!-- 右侧：主题切换按钮占位（后续绑定 SettingsViewModel 的主题切换命令） -->
+                <!-- 右侧：主题切换按钮占位 -->
                 <Button DockPanel.Dock="Right"
                         Content="{Binding ThemeButtonText}"
                         Command="{Binding ToggleThemeCommand}"

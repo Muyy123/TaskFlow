@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="TaskFlow.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:TaskFlow.ViewModels.Pages"
+             mc:Ignorable="d"
+             d:DesignHeight="500" d:DesignWidth="900"
+             d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}">
+    <StackPanel Margin="24" MaxWidth="520" HorizontalAlignment="Left">
+        <TextBlock Text="关于 TaskFlow" FontSize="22" FontWeight="Bold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+        <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="8"
+                Padding="20" Margin="0,16,0,0">
+            <StackPanel>
+                <TextBlock Text="TaskFlow 任务管理系统" FontSize="16" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock Text="一个基于 .NET 8 + WPF 的桌面任务管理应用，用于管理项目与任务。"
+                           FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextWrapping="Wrap" Margin="0,8,0,0"/>
+                <TextBlock Text="技术栈：.NET 8 / WPF / MVVM / EF Core / SQLite / LiveCharts2 / Serilog / CsvHelper"
+                           FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}"
+                           TextWrapping="Wrap" Margin="0,8,0,0"/>
+                <TextBlock FontSize="14" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,16,0,0">
+                    <Run Text="版本："/><Run Text="{Binding Version, Mode=OneWay}"/>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

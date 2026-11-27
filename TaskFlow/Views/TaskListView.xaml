@@ -59,6 +59,9 @@
                 <DataGridTextColumn Header="创建时间"
                                     Binding="{Binding CreatedAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
                                     Width="140"/>
+                <DataGridTextColumn Header="完成时间"
+                                    Binding="{Binding CompletedAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}"
+                                    Width="140"/>
             </DataGrid.Columns>
         </DataGrid>
 

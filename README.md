@@ -27,10 +27,10 @@ TaskFlow 是一个桌面端任务管理系统，用于集中管理项目与任�
 - ✅ 浅色 / 深色主题切换：语义色资源字典 + `DynamicResource` 运行时切换；常用控件深色适配（隐式样式 + ControlTemplate）
 - ✅ 仪表盘：KPI 统计卡片、状态分布饼图、项目任务数柱状图（LiveCharts2）
 - ✅ 结构化日志：Serilog 落文件（按天滚动）+ 服务层关键操作日志
+- ✅ 单元测试：xUnit 覆盖 ViewModel 核心逻辑（标题校验 + 完成时间联动）
 
 ### 规划中
 - ⬜ 列排序、CSV 导入导出
-- ⬜ 单元测试
 
 ## 技术栈
 
@@ -79,6 +79,7 @@ TaskFlow/
 ├── Controls/                     # 自定义控件
 ├── Converters/ Behaviors/        # 转换器与行为（预留）
 └── Themes/                       # 主题资源
+TaskFlow.Tests/                   # xUnit 单元测试项目
 ```
 
 ## 快速开始
@@ -97,6 +98,8 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 
 或在 Visual Studio 中打开 `TaskFlow.sln`，按 F5 运行。
 
+运行单元测试：`dotnet test`
+
 ### 数据库说明
 - 使用 SQLite，数据库文件 `taskflow.db` 在首次启动时自动创建于程序目录。
 - 首次启动会自动写入示例数据（项目、标签与若干任务），便于直接预览界面。
@@ -110,6 +113,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - **运行时主题切换**：以两套语义色 `ResourceDictionary` 定义浅色/深色主题，通过 `DynamicResource` 与 `ThemeService` 在运行时替换字典实现整体换肤；控件深色适配用隐式样式 + ControlTemplate 实现。
 - **EF Core Migrations**：通过 `dotnet ef` 生成迁移，运行时用 `Migrate()` 做 schema 版本演进，替代 `EnsureCreated()`。
 - **结构化日志**：`ILogger<T>` 抽象 + Serilog 落文件，服务层记录关键操作，日志模板捕获结构化属性。
+- **单元测试**：xUnit 测试 ViewModel 核心逻辑（标题校验、完成时间联动），用假服务替代真实依赖。
 
 ## Roadmap
 
@@ -118,7 +122,7 @@ dotnet run --project TaskFlow/TaskFlow.csproj
 - [x] 主题切换
 - [x] 表单验证与编辑对话框
 - [ ] 排序与 CSV 导入导出
-- [ ] xUnit 单元测试
+- [x] xUnit 单元测试
 - [x] EF Core Migrations
 
 ## 许可证
